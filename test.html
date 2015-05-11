@@ -1,0 +1,78 @@
+
+<link rel="stylesheet" href="libs/jquery.mobile-1.4.5.min.css" />
+<script src="libs/jquery-2.1.4.js"></script>
+<script src="libs/jquery.mobile-1.4.5.min.js"></script>
+<script>
+    $(document).on('pageinit', '#home', function () {
+        var url = "ajaxref.php?callback=";
+
+        $.ajax({
+            url: url,
+            dataType: "jsonp",
+            async: false,
+            jsonCallback: jsonCallback,
+            success: function (results) {
+                ajax.parseJSONP();
+//                alert(results);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(errorThrown);
+                alert(textStatus);
+            }
+        });
+    });
+
+    $(document).on('vclick', '#ref_list li', function () {
+        $.mobile.changePage("#headline", {transition: "slide", changeHash: false});
+    });
+
+    var refInfo = {
+        id: null,
+        result: null
+    };
+
+    var ajax = {
+        parseJSONP: function (res) {
+            refInfo.result = res.results;
+            $.each(res.results, function (i, row) {
+                console.log(JSON.stringify(row));
+                $('#ref_list').append('<li><a data-id=" ' + row.libid + ' ">' + row.title + '</a></li>');
+            });
+            $('#ref_list').listview('refresh');
+        }
+    };
+
+
+</script>
+
+<div data-role="page" id="home">
+    <div data-role="header" data-theme="a">
+        <h3>Reference</h3>
+    </div>
+
+    <div data-role="content">
+        <div data-iscrol>
+            <ul data-role="listview" id="ref_list" data-theme="b">
+                <li>hahahah</li>
+            </ul>
+        </div>
+    </div>
+
+    <div data-role="footer">
+        <h4>Copyright</h4>
+    </div>
+</div>
+
+<div data-role="page" data-theme="b" id="headline">
+    <div data-role="header" data-theme="a">
+        <a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">BACK</a>
+        <h3>Reference Info</h3>
+    </div>
+
+    <div data-role="content">
+        <ul data-role="listview" id="ref_detail" data-theme="a">
+
+        </ul>
+    </div>
+</div>
+

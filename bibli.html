@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Bibli</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="libs/jquery.mobile-1.4.5.min.css" />
+        <script src="libs/jquery-2.1.4.js"></script>
+        <script src="libs/jquery.mobile-1.4.5.min.js"></script>
+        <script>
+            var detail = null;
+
+            $(document).on('pageinit', '#home', function () {
+                url = "ajaxref.php";
+                $.ajax({
+                    url: url,
+                    success: function () {
+                        $.getJSON("ajaxref.php", function (json) {
+                            detail = json;
+                            $.each(json, function (i, row) {
+                                $('#ref_list').append('<li><a data-id="' + row.libid + '">' + row.title + '</a></li>');
+                            });
+                            $('#ref_list').listview('refresh');
+                        });
+                    },
+                    error: function (errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+                $('#ref_list').listview('refresh');
+            });
+
+            $(document).on('vclick', '#ref_list li a', function () {
+                clickid = $(this).attr('data-id');
+                $.mobile.changePage("#headline", {transition: "pop", changeHash: false});
+            });
+
+            $(document).on('vclick', '#btn_srh', function () {
+                var key = $('#keyword').val();
+//                t_url = "search.php";
+//                param = "?keyword=" + key;
+//                alert(param);
+                $.ajax({
+                    url: "search.php",
+                    success: function () {
+                        $('#srtab').load("search.php?keyword=" + key);
+                    },
+                    error: function (errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+                $.mobile.changePage("#srh", {transition: "slide", changeHash: false});
+            });
+
+            $(document).on('pagebeforeshow', '#headline', function () {
+                $('#ref_detail').empty();
+                $.each(detail, function (i, row) {
+                    if (row.libid == clickid) {
+                        $('#ref_detail').append('<li>Title: ' + row.title + '</li>');
+                        $('#ref_detail').append('<li>Author: ' + row.author + '</li>');
+                        $('#ref_detail').append('<li>Year : ' + row.year + '</li>');
+                        $('#ref_detail').append('<li>Add At : ' + row.addedAt + '</li>');
+                        $('#ref_detail').append('<li>PDF : ' + row.pdf + '</li>');
+                        $('#ref_detail').listview('refresh');
+                    }
+                });
+            });
+
+        </script>
+    </head>
+    <body>
+        <div data-role="page" id="home" data-theme="a">
+            <div data-role="header">
+                <div >
+                    <form action="search.php" method="post" data-ajax="false">
+                        <input type="search" name="keyword" id="keyword"/>
+                        <input type="submit" name="submit" value="Search"/>
+                        <input type="button" id="btn_srh" name="btn_srh" value="Btn_Search"/>
+                    </form>
+                </div>
+
+                <div>
+                    <form action="server_login.php" method="post" data-ajax="false">
+                        <input type="hidden" name="status" value="logout" />
+                        <input type="submit" name="submit" value="Logout" />
+                    </form>
+                </div>
+
+            </div>
+            <div data-role="main">
+                <div data-role="content">
+                    <h2>References:</h2>
+                    <div data-iscrol>
+                        <ul data-role="listview" id="ref_list" data-theme="b">
+                            <!--<li>hahahah</li>-->
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div data-role="footer">
+                <h2>Copyright @ Kai</h2>
+            </div>
+        </div>
+
+        <div data-role="page" data-theme="b" id="headline">
+            <div data-role="header" data-theme="a">
+                <a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">BACK</a>
+                <h3>Reference Info</h3>
+            </div>
+
+            <div data-role="content">
+                <ul data-role="listview" id="ref_detail" data-theme="a">
+
+                </ul>
+            </div>
+            <div data-role="footer">
+                <h2>Copyright @ Kai</h2>
+            </div>
+        </div>
+
+        <div data-role="page" data-theme="b" id="srh">
+            <div data-role="header" data-theme="a">
+                <a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">BACK</a>
+                <h3>Search Results</h3>
+            </div>
+
+            <div data-role="content" id="srtab">
+                <table>
+                    <tr>
+                        <th>Library</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Year</th>
+                        <th>Time</th>
+                        <th>PDF</th>
+                    </tr>
+
+                </table>
+            </div>
+            <div data-role="footer">
+                <h2>Copyright @ Kai</h2>
+            </div>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="libs/jquery.mobile-1.4.5.min.css" />
+        <script src="libs/jquery-2.1.4.js"></script>
+        <script src="libs/jquery.mobile-1.4.5.min.js"></script>
+    </head>
+    <body>
+        <div data-role="page" id="page" data-theme="b">
+            <div data-role="header">
+                <h1>Bibli Mob</h1>
+            </div>
+            <div data-role="main" data-theme="a" >
+                <form action="server_login.php" method="post" data-ajax="false">
+                    <label>Email:</label>
+                    <input type="text" name="email" placeholder="Email Please" />
+                    
+                    <label>Password:</label>
+                    <input type="password" name="passwd" placeholder="Password Please" />
+                    <input type="hidden" name="status" value="login" />
+                    <ul>
+                        <li> <input type="submit" name="submit" value="Login" /></li>
+                        <li><a href="#">Register</a></li>
+                    </ul>
+                </form>
+            </div>
+            <div data-role="footer">
+                <h2>Copyright @ Kai</h2>
+            </div>
+        </div>
+    </body>
+</html>
